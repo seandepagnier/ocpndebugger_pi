@@ -168,13 +168,13 @@ width: 30px;\
 height: 30px;\
 }\
 QRadioButton {\
-    font-size: 16px;\
+    font-size: 18px;\
 } \
 QPushButton {\
-    font-size: 16px;\
+    font-size: 20px;\
 } \
 QLineEdit {\
-    font-size: 16px;\
+    font-size: 20px;\
 } \
 QComboBox {\
     font-size: 16px;\

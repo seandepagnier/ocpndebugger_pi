@@ -56,9 +56,9 @@ OpenCPNDebuggerDlgImpl::OpenCPNDebuggerDlgImpl( wxWindow* parent, wxWindowID id,
     m_lMessages->InsertColumn(TOTAL_DATA, _("Total Data"));
 }
 
-
-
-
+#ifdef foreach
+#undef foreach
+#endif
 #define foreach(LIST, TYPE, VAR) \
     TYPE VAR; \
     for(std::list<TYPE>::iterator LIST##iterator = LIST.begin(); \
@@ -74,7 +74,6 @@ void OpenCPNDebuggerDlgImpl::SetGPSMessage(wxString &msg)
     } else
         m_paused_gps_messages.push_back(msg);
 }
-
 
 void OpenCPNDebuggerDlgImpl::SetNMEAEvent(wxString &msg)
 {
@@ -163,7 +162,7 @@ void OpenCPNDebuggerDlgImpl::SetPluginMessageInternal(wxString &message_id, wxSt
             msg->message_body = message_body; // update message
 
             if(i == selected_index)
-                m_stMessage->SetLabel(message_body);
+                m_tMessage->SetValue(message_body);
             return;
         }
 
@@ -184,17 +183,11 @@ void OpenCPNDebuggerDlgImpl::OnMessageSelected( wxListEvent& event )
 {
     long index = m_lMessages->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if(index == -1)
-        m_stMessage->SetLabel(_("No Message Selected"));
+        m_tMessage->SetValue(_("No Message Selected"));
     else {
         wxString message_body =
             reinterpret_cast<Message*>(wxUIntToPtr(m_lMessages->GetItemData(index)))->message_body;
-        m_stMessage->SetLabel(message_body);
-        m_stMessage->Fit();
-
-        // hack
-        wxSize s = m_scrolledWindow1->GetSize();
-        m_scrolledWindow1->SetSize(wxSize(100, 100));
-        m_scrolledWindow1->SetSize(s);
+        m_tMessage->SetValue(message_body);
     }
 }
 
