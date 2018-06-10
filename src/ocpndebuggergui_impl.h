@@ -29,6 +29,8 @@
 #ifndef _OpenCPNDEBUGGERGUI_IMPL_H_
 #define _OpenCPNDEBUGGERGUI_IMPL_H_
 
+#include <list>
+
 #include "ocpndebugger_pi.h"
 #include "ocpndebuggergui.h"
 
@@ -48,6 +50,15 @@ class OpenCPNDebuggerDlgImpl : public OpenCPNDebuggerDlg {
     void SetAISMessage(wxString &msg);
     void SetPluginMessage(wxString &id, wxString &msg);
     void SetSignalKMessage(wxString &msg);
+
+    void OnMessageSelected( wxListEvent& event );
+    void OnClear( wxCommandEvent& event );
+
+private:
+    void SetPluginMessageInternal(wxString &message_id, wxString &message_body);
+
+    std::list <wxString> m_paused_nmea_events, m_paused_gps_messages, m_paused_ais_messages;
+    std::list <std::pair<wxString, wxString> > m_paused_messages;
 };
 
 #endif

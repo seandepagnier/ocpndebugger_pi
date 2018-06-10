@@ -1,5 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 // C++ code generated with wxFormBuilder (version Feb 16 2016)
+=======
+// C++ code generated with wxFormBuilder (version Jul 15 2016)
+>>>>>>> origin/messaging-improvements
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -17,13 +21,25 @@
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+<<<<<<< HEAD
 #include <wx/tglbtn.h>
+=======
+>>>>>>> origin/messaging-improvements
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+<<<<<<< HEAD
 #include <wx/notebook.h>
+=======
+#include <wx/stattext.h>
+#include <wx/scrolwin.h>
+#include <wx/listctrl.h>
+#include <wx/splitter.h>
+#include <wx/notebook.h>
+#include <wx/tglbtn.h>
+>>>>>>> origin/messaging-improvements
 #include <wx/button.h>
 #include <wx/dialog.h>
 
@@ -41,6 +57,7 @@ class OpenCPNDebuggerDlg : public wxDialog
 		wxNotebook* m_notebook1;
 		wxPanel* m_panelGPS;
 		wxTextCtrl* m_tcGPS;
+<<<<<<< HEAD
 		wxToggleButton* m_tbGPSPause;
 		wxPanel* m_panelAIS;
 		wxTextCtrl* m_tcAIS;
@@ -56,11 +73,42 @@ class OpenCPNDebuggerDlg : public wxDialog
 		wxToggleButton* m_tbSignalKPause;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
+=======
+		wxPanel* m_panelAIS;
+		wxTextCtrl* m_tcAIS;
+		wxPanel* m_panelEvents;
+		wxTextCtrl* m_tcEvents;
+		wxPanel* m_panelMessages;
+		wxSplitterWindow* m_splitter1;
+		wxPanel* m_panel1;
+		wxScrolledWindow* m_scrolledWindow1;
+		wxStaticText* m_stMessage;
+		wxPanel* m_panel2;
+		wxListCtrl* m_lMessages;
+		wxToggleButton* m_tbPause;
+		wxButton* m_bClear;
+		wxStdDialogButtonSizer* m_sdbSizer1;
+		wxButton* m_sdbSizer1OK;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnMessageSelected( wxListEvent& event ) { event.Skip(); }
+		virtual void OnClear( wxCommandEvent& event ) { event.Skip(); }
+		
+>>>>>>> origin/messaging-improvements
 	
 	public:
 		
 		OpenCPNDebuggerDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OPENCPN Debugger"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 701,370 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~OpenCPNDebuggerDlg();
+<<<<<<< HEAD
+=======
+		
+		void m_splitter1OnIdle( wxIdleEvent& )
+		{
+			m_splitter1->SetSashPosition( 100 );
+			m_splitter1->Disconnect( wxEVT_IDLE, wxIdleEventHandler( OpenCPNDebuggerDlg::m_splitter1OnIdle ), NULL, this );
+		}
+>>>>>>> origin/messaging-improvements
 	
 };
 

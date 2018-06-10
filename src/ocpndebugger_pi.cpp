@@ -27,19 +27,23 @@
  */
 #include "wx/wxprec.h"
 
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif  // precompiled headers
+#ifndef  WX_PRECOMP
+  #include "wx/wx.h"
+#endif //precompiled headers
 
 #include "ocpndebugger_pi.h"
 
 // the class factories, used to create and destroy instances of the PlugIn
 
-extern "C" DECL_EXP opencpn_plugin *create_pi(void *ppimgr) {
+extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
+{
     return new ocpndebugger_pi(ppimgr);
 }
 
-extern "C" DECL_EXP void destroy_pi(opencpn_plugin *p) { delete p; }
+extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
+{
+    delete p;
+}
 
 //---------------------------------------------------------------------------------------------------------
 //
@@ -55,57 +59,60 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin *p) { delete p; }
 //
 //---------------------------------------------------------------------------------------------------------
 
-ocpndebugger_pi::ocpndebugger_pi(void *ppimgr) : opencpn_plugin_114(ppimgr) {
-    // Create the PlugIn icons
-    initialize_images();
+ocpndebugger_pi::ocpndebugger_pi(void *ppimgr) : opencpn_plugin_114(ppimgr)
+{
+      // Create the PlugIn icons
+      initialize_images();
 }
 
-int ocpndebugger_pi::Init(void) {
-    AddLocaleCatalog(_T("opencpn-ocpndebugger_pi"));
+int ocpndebugger_pi::Init(void)
+{
+      AddLocaleCatalog( _T("opencpn-ocpndebugger_pi") );
 
-    // Set some default private member parameters
-    m_ocpndebugger_dialog_x = 0;
-    m_ocpndebugger_dialog_y = 0;
+      // Set some default private member parameters
+      m_ocpndebugger_dialog_x = 0;
+      m_ocpndebugger_dialog_y = 0;
 
-    ::wxDisplaySize(&m_display_width, &m_display_height);
+      ::wxDisplaySize(&m_display_width, &m_display_height);
 
-    //    Get a pointer to the opencpn display canvas, to use as a parent for
-    //    the
-    //    POI Manager dialog
-    m_parent_window = GetOCPNCanvasWindow();
+      //    Get a pointer to the opencpn display canvas, to use as a parent for the POI Manager dialog
+      m_parent_window = GetOCPNCanvasWindow();
 
-//    This PlugIn needs a toolbar icon, so request its insertion
-#ifdef OCPN_USE_SVG
-    m_leftclick_tool_id = InsertPlugInToolSVG(
-        _T( "OpenCPNDebugger" ), _svg_ocpndebugger, _svg_ocpndebugger_rollover,
-        _svg_ocpndebugger_toggled, wxITEM_CHECK, _("OpenCPNDebugger"), _T( "" ),
-        NULL, OpenCPNDEBUGGER_TOOL_POSITION, 0, this);
+      //    This PlugIn needs a toolbar icon, so request its insertion
+#ifdef OCPN_SVG
+      m_leftclick_tool_id = InsertPlugInToolSVG( _T( "OpenCPNDebugger" ), _svg_ocpndebugger, _svg_ocpndebugger_rollover, _svg_ocpndebugger_toggled, wxITEM_CHECK, _( "OpenCPNDebugger" ), _T( "" ), NULL, OpenCPNDEBUGGER_TOOL_POSITION, 0, this);
 #else
-    m_leftclick_tool_id =
-        InsertPlugInTool(_T(""), _img_ocpndebugger, _img_ocpndebugger,
-                         wxITEM_NORMAL, _("OpenCPNDebugger"), _T(""), NULL,
-                         OpenCPNDEBUGGER_TOOL_POSITION, 0, this);
+      m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_ocpndebugger, _img_ocpndebugger, wxITEM_NORMAL,
+            _("OpenCPNDebugger"), _T(""), NULL,
+             OpenCPNDEBUGGER_TOOL_POSITION, 0, this);
 #endif
 
-    m_pOpenCPNDebuggerDialog = NULL;
+      m_pOpenCPNDebuggerDialog = NULL;
 
-    return (WANTS_TOOLBAR_CALLBACK | INSTALLS_TOOLBAR_TOOL |
-            WANTS_NMEA_SENTENCES | WANTS_NMEA_EVENTS | WANTS_AIS_SENTENCES |
-            WANTS_PLUGIN_MESSAGING | WANTS_SIGNALK_SENTENCES);
+      return (WANTS_TOOLBAR_CALLBACK    |
+              INSTALLS_TOOLBAR_TOOL     |
+              WANTS_NMEA_SENTENCES      |
+              WANTS_NMEA_EVENTS         |
+              WANTS_AIS_SENTENCES       |
+              WANTS_PLUGIN_MESSAGING    |
+              WANTS_SIGNALK_SENTENCES
+           );
 }
 
-bool ocpndebugger_pi::DeInit(void) {
-    //    Record the dialog position
-    if (NULL != m_pOpenCPNDebuggerDialog) {
-        wxPoint p = m_pOpenCPNDebuggerDialog->GetPosition();
-        SetOpenCPNDebuggerDialogX(p.x);
-        SetOpenCPNDebuggerDialogY(p.y);
+bool ocpndebugger_pi::DeInit(void)
+{
+      //    Record the dialog position
+      if (NULL != m_pOpenCPNDebuggerDialog)
+      {
+            wxPoint p = m_pOpenCPNDebuggerDialog->GetPosition();
+            SetOpenCPNDebuggerDialogX(p.x);
+            SetOpenCPNDebuggerDialogY(p.y);
 
-        m_pOpenCPNDebuggerDialog->Close();
-        delete m_pOpenCPNDebuggerDialog;
-        m_pOpenCPNDebuggerDialog = NULL;
-    }
-    return true;
+            m_pOpenCPNDebuggerDialog->Close();
+            delete m_pOpenCPNDebuggerDialog;
+            m_pOpenCPNDebuggerDialog = NULL;
+      }
+      return true;
 }
 
 int ocpndebugger_pi::GetAPIVersionMajor() { return MY_API_VERSION_MAJOR; }
@@ -120,8 +127,9 @@ wxBitmap *ocpndebugger_pi::GetPlugInBitmap() { return _img_ocpndebugger_pi; }
 
 wxString ocpndebugger_pi::GetCommonName() { return _("OpenCPNDebugger"); }
 
-wxString ocpndebugger_pi::GetShortDescription() {
-    return _("OpenCPNDebugger PlugIn for OpenCPN");
+wxString ocpndebugger_pi::GetShortDescription()
+{
+      return _("OpenCPNDebugger PlugIn for OpenCPN");
 }
 
 wxString ocpndebugger_pi::GetLongDescription() {
@@ -133,44 +141,48 @@ wxString ocpndebugger_pi::GetLongDescription() {
 
 int ocpndebugger_pi::GetToolbarToolCount(void) { return 1; }
 
-void ocpndebugger_pi::SetColorScheme(PI_ColorScheme cs) {
-    if (NULL == m_pOpenCPNDebuggerDialog) return;
+void ocpndebugger_pi::SetColorScheme(PI_ColorScheme cs)
+{
+      if (NULL == m_pOpenCPNDebuggerDialog)
+            return;
 
-    DimeWindow(m_pOpenCPNDebuggerDialog);
+      DimeWindow(m_pOpenCPNDebuggerDialog);
 }
 
-void ocpndebugger_pi::OnToolbarToolCallback(int id) {
-    if (NULL == m_pOpenCPNDebuggerDialog) {
+
+void ocpndebugger_pi::OnToolbarToolCallback(int id)
+{
+    if(NULL == m_pOpenCPNDebuggerDialog)
+    {
         m_pOpenCPNDebuggerDialog = new OpenCPNDebuggerDlgImpl(m_parent_window);
-        m_pOpenCPNDebuggerDialog->Move(
-            wxPoint(m_ocpndebugger_dialog_x, m_ocpndebugger_dialog_y));
+        m_pOpenCPNDebuggerDialog->Move(wxPoint(m_ocpndebugger_dialog_x, m_ocpndebugger_dialog_y));
     }
 #ifdef __OCPN__ANDROID__
     m_pOpenCPNDebuggerDialog->Move(0, 0);
     m_pOpenCPNDebuggerDialog->SetSize(m_parent_window->GetSize());
     m_pOpenCPNDebuggerDialog->ShowModal();
 #else
-    if( !m_pOpenCPNDebuggerDialog->IsShown() )
-        m_pOpenCPNDebuggerDialog->Show();
-    else
-        m_pOpenCPNDebuggerDialog->Hide();
+    m_pOpenCPNDebuggerDialog->Show(!m_pOpenCPNDebuggerDialog->IsShown());
 #endif
 }
 
-void ocpndebugger_pi::SetNMEASentence(wxString &sentence) {
-    if (NULL != m_pOpenCPNDebuggerDialog)
-        m_pOpenCPNDebuggerDialog->SetGPSMessage(sentence);
+
+void ocpndebugger_pi::SetNMEASentence(wxString &sentence)
+{
+      if(NULL != m_pOpenCPNDebuggerDialog)
+            m_pOpenCPNDebuggerDialog->SetGPSMessage(sentence);
 }
 
-void ocpndebugger_pi::SetAISSentence(wxString &sentence) {
-    if (NULL != m_pOpenCPNDebuggerDialog)
-        m_pOpenCPNDebuggerDialog->SetAISMessage(sentence);
+void ocpndebugger_pi::SetAISSentence(wxString &sentence)
+{
+      if(NULL != m_pOpenCPNDebuggerDialog)
+            m_pOpenCPNDebuggerDialog->SetAISMessage(sentence);
 }
 
-void ocpndebugger_pi::SetPluginMessage(wxString &message_id,
-                                       wxString &message_body) {
-    if (NULL != m_pOpenCPNDebuggerDialog)
-        m_pOpenCPNDebuggerDialog->SetPluginMessage(message_id, message_body);
+void ocpndebugger_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
+{
+      if(NULL != m_pOpenCPNDebuggerDialog)
+            m_pOpenCPNDebuggerDialog->SetPluginMessage(message_id, message_body);
 }
 
 void ocpndebugger_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
@@ -183,7 +195,6 @@ void ocpndebugger_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
         m_pOpenCPNDebuggerDialog->SetNMEAEvent(msg);
     }
 }
-
 void ocpndebugger_pi::SetSignalKSentence(wxString &sentence) {
     if (NULL != m_pOpenCPNDebuggerDialog)
         m_pOpenCPNDebuggerDialog->SetSignalKMessage(sentence);
