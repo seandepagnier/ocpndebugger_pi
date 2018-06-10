@@ -75,7 +75,7 @@ int ocpndebugger_pi::Init(void) {
     m_parent_window = GetOCPNCanvasWindow();
 
 //    This PlugIn needs a toolbar icon, so request its insertion
-#ifdef OCPNDEBUGGER_USE_SVG
+#ifdef OCPN_USE_SVG
     m_leftclick_tool_id = InsertPlugInToolSVG(
         _T( "OpenCPNDebugger" ), _svg_ocpndebugger, _svg_ocpndebugger_rollover,
         _svg_ocpndebugger_toggled, wxITEM_CHECK, _("OpenCPNDebugger"), _T( "" ),
@@ -145,10 +145,16 @@ void ocpndebugger_pi::OnToolbarToolCallback(int id) {
         m_pOpenCPNDebuggerDialog->Move(
             wxPoint(m_ocpndebugger_dialog_x, m_ocpndebugger_dialog_y));
     }
+#ifdef __OCPN__ANDROID__
+    m_pOpenCPNDebuggerDialog->Move(0, 0);
+    m_pOpenCPNDebuggerDialog->SetSize(m_parent_window->GetSize());
+    m_pOpenCPNDebuggerDialog->ShowModal();
+#else
     if( !m_pOpenCPNDebuggerDialog->IsShown() )
         m_pOpenCPNDebuggerDialog->Show();
     else
         m_pOpenCPNDebuggerDialog->Hide();
+#endif
 }
 
 void ocpndebugger_pi::SetNMEASentence(wxString &sentence) {

@@ -27,12 +27,18 @@
  */
 
 #include "ocpndebuggergui_impl.h"
+#include "qtstylesheet.h"
 
 OpenCPNDebuggerDlgImpl::OpenCPNDebuggerDlgImpl(wxWindow *parent, wxWindowID id,
                                                const wxString &title,
                                                const wxPoint &pos,
                                                const wxSize &size, long style)
-    : OpenCPNDebuggerDlg(parent, id, title, pos, size, style) {}
+    : OpenCPNDebuggerDlg(parent, id, title, pos, size, style)
+{
+#ifdef __OCPN__ANDROID__
+    GetHandle()->setStyleSheet( qtStyleSheet);
+#endif
+}
 
 void OpenCPNDebuggerDlgImpl::SetGPSMessage(wxString &msg) {
     if (!m_tbGPSPause->GetValue()) m_tcGPS->AppendText(msg);

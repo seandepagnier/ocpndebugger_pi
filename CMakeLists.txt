@@ -14,24 +14,14 @@ SET(VERBOSE_NAME OpenCPNDebugger)
 SET(TITLE_NAME OpenCPNDebugger)
 SET(CPACK_PACKAGE_CONTACT "Pavel Kalian")
 
-SET(VERSION_MAJOR "1")
-SET(VERSION_MINOR "3")
-
-#SET(CMAKE_BUILD_TYPE Debug)
-
-OPTION(OCPNDEBUGGER_USE_SVG "Use SVG graphics" ON)
-
 INCLUDE("cmake/PluginConfigure.cmake")
-
-IF(OCPNDEBUGGER_USE_SVG)
-  ADD_DEFINITIONS(-DOCPNDEBUGGER_USE_SVG)
-ENDIF(OCPNDEBUGGER_USE_SVG)
 
 SET(SRC_OCPNDEBUGGER
             src/ocpndebugger_pi.h
             src/ocpndebugger_pi.cpp
             src/icons.h
             src/icons.cpp
+            src/qtstylesheet.cpp
             src/ocpndebuggergui.h
             src/ocpndebuggergui.cpp
             src/ocpndebuggergui_impl.cpp

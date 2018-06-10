@@ -10,7 +10,7 @@
 wxBitmap *_img_ocpndebugger;
 wxBitmap *_img_ocpndebugger_pi;
 
-#ifdef OCPNDEBUGGER_USE_SVG
+#ifdef OCPN_USE_SVG
 #include "ocpn_plugin.h"
 wxString _svg_ocpndebugger;
 wxString _svg_ocpndebugger_rollover;
@@ -28,7 +28,7 @@ void initialize_images(void)
 		_img_ocpndebugger_pi = new wxBitmap(wxImage(sm));
 	}
     
-#ifdef OCPNDEBUGGER_USE_SVG
+#ifdef OCPN_USE_SVG
     wxFileName fn;
     fn.SetPath(*GetpSharedDataLocation());
     fn.AppendDir(_T("plugins"));
